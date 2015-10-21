@@ -1,0 +1,1 @@
+This is the basic framework for a carry trade Shiny app.  Feel free to improve.  The data are pulled from FRED via the `quantmod` library. 
