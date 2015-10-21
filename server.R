@@ -13,23 +13,25 @@ shinyServer(function(input, output) {
                           "1" = "EXJPUS",
                           "2" = "EXUSUK")
     
+## Interest Rates, Government Securities, Treasury Bills for Japan:    INTGSTJPM193N
+    
+## Interest Rates, Government Securities, Treasury Bills for United Kingdom:  INTGSTGBM193N
+    
     IfundingSym <- switch(input$funding,
-                          "1" = "",
-                          "2" = "")
+                          "1" = "INTGSTJPM193N",
+                          "2" = "INTGSTGBM193N")
     
     IinvestingSym <- switch(input$investing,
-                          "1" = "",
-                          "2" = "")
+                          "1" = "INTGSTJPM193N",
+                          "2" = "INTGSTGBM193N")
     
-    Cfunding <- getSymbols(input$funding, auto.assign = FALSE)
-    Cinvesting <- getSymbols(input$investing, auto.assign = FALSE)
-    Ifunding <- getSymbols(input$Ifunding, auto.assign = FALSE)
-    Iinvesting <- getSymbols(input$Iinvesting, auto.assign = FALSE)
+    Cfunding <- getSymbols(fxFundingSym, auto.assign = FALSE, src = "FRED")
+    Cinvesting <- getSymbols(fxInvestingSym, auto.assign = FALSE, src = "FRED")
+    Ifunding <- getSymbols(IfundingSym, auto.assign = FALSE, src = "FRED")
+    Iinvesting <- getSymbols(IinvestingSym, auto.assign = FALSE, src = "FRED")
     
     allData <- merge.xts(Cfunding, Cinvesting, Ifunding, Iinvesting, join = "inner")
       
-    })
-    
   })
   
   ### uncomment this to see an interactive plot via dygraphs
@@ -37,7 +39,9 @@ shinyServer(function(input, output) {
     
     allData1 <- dataInput()
     
-    dygraph(Ad(prices)) %>%
+## TODO: Now we need to input the carry trade profit calculation here ---- 
+    
+    dygraph(allData1) %>%
       dyRangeSelector()
   })
-})
+    })

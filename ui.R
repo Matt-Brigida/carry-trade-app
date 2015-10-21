@@ -2,15 +2,17 @@ library(shiny)
 library(dygraphs)
 
 shinyUI(fluidPage(
-  titlePanel("Simple Stock Charting App"),
+  titlePanel("Carry Trade Profit"),
   
   sidebarLayout(
     sidebarPanel(
-      helpText("Input a ticker and see the stock's chart."),
+      helpText("Select Funding and Investing Currency"),
       
-      selectizeInput("funding", label = h3("Select Funding Currency"), choices= c("JPY" = "1", "GBP" = "2"), value = "JPY") ,
+      selectizeInput("funding", label = h3("Select Funding Currency"), choices= c("JPY" = "1", "GBP" = "2"), selected = "JPY") ,
       
-      selectizeInput("investing", label = h3("Select Funding Currency"), choices= c("JPY" = "1", "GBP" = "2"), value = "GBP") 
+      selectizeInput("investing", label = h3("Select Investing Currency"), choices= c("JPY" = "1", "GBP" = "2"), selected = "GBP") 
+      
+## TODO: Input a date range input so you can specify the carry trade interval ----
     ),
     
     ### uncomment for static chart    
