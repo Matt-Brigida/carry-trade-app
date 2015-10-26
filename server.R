@@ -31,6 +31,8 @@ shinyServer(function(input, output) {
     Iinvesting <- getSymbols(IinvestingSym, auto.assign = FALSE, src = "FRED")
     
     allData <- merge.xts(Cfunding, Cinvesting, Ifunding, Iinvesting, join = "inner")
+    
+    ## put calculations here
       
   })
   
