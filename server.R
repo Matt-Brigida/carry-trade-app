@@ -39,19 +39,16 @@ shinyServer(function(input, output) {
     perChangeGBP <- Delt(crossRate)[-1]
     perChangeJPY <- lag(crossRate)[-1]/crossRate[-length(crossRate)]
     
-    if(fxFundingSym = "EXJPUS"){
+    if(fxFundingSym == "EXJPUS"){
      FXret <- cumsum(perChangeGBP)
      Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
                      totRet <- FXret + Iret
                      
-    if(fxFundingSym = "EXGBP"){
+    } else {
       FXret <- cumsum(perChangeGBP)
       Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
                       totRet <- FXret + Iret
-    } else {
       
-    }
-    }
     }
       
   })
