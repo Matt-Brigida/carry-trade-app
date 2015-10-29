@@ -31,6 +31,25 @@ shinyServer(function(input, output) {
     Iinvesting <- getSymbols(IinvestingSym, auto.assign = FALSE, src = "FRED")
     
     allData <- merge.xts(Cfunding, Cinvesting, Ifunding, Iinvesting, join = "inner")
+    
+     ## cross rate is JPY/GBP -- the amount of yes per GBP ----
+    crossRate <- allData$Cfunding * allData$Cinvesting
+    
+    ## percent chage in currencies
+    perChangeGBP <- Delt(crossRate)[-1]
+    perChangeJPY <- lag(crossRate)[-1]/crossRate[-length(crossRate)]
+    
+    if(fxFundingSym == "EXJPUS"){
+     FXret <- cumsum(perChangeGBP)
+     Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
+                     totRet <- FXret + Iret
+                     
+    } else {
+      FXret <- cumsum(perChangeGBP)
+      Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
+                      totRet <- FXret + Iret
+      
+    }
       
   })
   
