@@ -31,6 +31,8 @@ shinyServer(function(input, output) {
     Iinvesting <- getSymbols(IinvestingSym, auto.assign = FALSE, src = "FRED")
     
     allData <- merge.xts(Cfunding, Cinvesting, Ifunding, Iinvesting, join = "inner")
+    allData <- allData[complete.cases(allData),]
+    names(allData) <- c("Cfunding", "Cinvesting", "Ifunding", "Iinvesting")
     
      ## cross rate is JPY/GBP -- the amount of yes per GBP ----
     crossRate <- allData$Cfunding * allData$Cinvesting
@@ -39,28 +41,28 @@ shinyServer(function(input, output) {
     perChangeGBP <- Delt(crossRate)[-1]
     perChangeJPY <- lag(crossRate)[-1]/crossRate[-length(crossRate)]
     
-    if(fxFundingSym == "EXJPUS"){
-     FXret <- cumsum(perChangeGBP)
-     Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
-                     totRet <- FXret + Iret
-                     
+    if(fxFundingSym == "EXJPUS") {
+      FXret <- cumsum(perChangeGBP)
+      Iret <- cumsum((allData$Iinvesting[-1] - allData$Ifunding[-1])/12)
+      totRet <- FXret + Iret
+      
     } else {
       FXret <- cumsum(perChangeGBP)
-      Iret <- cumsum((allData$Iinvesting[-1] - allData$IFunding[-1])/12)
-                      totRet <- FXret + Iret
+      Iret <- cumsum((allData$Iinvesting[-1] - allData$Ifunding[-1])/12)
+      totRet <- -FXret + Iret
       
     }
-      
+    totRet <<- totRet
   })
   
   ### uncomment this to see an interactive plot via dygraphs
   output$plot <- renderDygraph({
     
-    allData1 <- dataInput()
+#    allData1 <- dataInput()
     
 ## TODO: Now we need to input the carry trade profit calculation here ---- 
     
-    dygraph(allData1) %>%
+    dygraph(totRet) %>%
       dyRangeSelector()
   })
     })
